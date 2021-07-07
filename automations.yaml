@@ -1,0 +1,156 @@
+# Lights should turn off when I leave (always) and on when I arrive (always)
+# TODO: find a better way of tracking location.  It's pretty slow to
+# connect to WIFI
+- id: '1'
+  alias: Turn off the lights when I leave home
+  description: ''
+  trigger:
+  - entity_id: device_tracker.hostone
+    from: home
+    platform: state
+    to: not_home
+  condition: []
+  action:
+    - service: light.turn_off
+      entity_id: all
+- id: '2'
+  alias: Turn on the lights when I arrive home
+  description: ''
+  trigger:
+  - entity_id: device_tracker.hostone
+    from: not_home
+    platform: state
+    to: home
+  condition: []
+  action:
+    - service: light.turn_on
+      entity_id: all
+# Sleep Hygiene
+# 11PM - lights should turn red
+# 12PM - lights should turn off
+# Between 12PM-7AM, lights on bathroom and hallway should turn on 
+# to dim for 5 minutes on motion
+# TODO: After 7AM, if lights turn on, they should be set to not-red.
+- id: '3'
+  alias: Turn off lights at midnight
+  description: ''
+  trigger:
+  - platform: time
+    at: "00:00:00"
+  condition: []
+  action:
+    - service: light.turn_off
+      entity_id: all
+- id: '4'
+  alias: Turn lights red at 23:00
+  description: ''
+  trigger:
+  - platform: time
+    at: "23:00:00"
+  condition: []
+  action:
+    - service: light.turn_on # Lights that support color
+      data: 
+        entity_id: >- 
+          {{
+            states.light
+            | selectattr('state', 'eq', 'on')
+            | selectattr('attributes.supported_features', 'eq', 63)
+            | rejectattr('attributes.is_hue_group')
+            | join(',',attribute="entity_id")
+          }}
+        color_name: red
+    - service: light.turn_on # No Color Support, just dim them
+      data: 
+        entity_id: >- 
+          {{
+            states.light
+            | selectattr('state', 'eq', 'on')
+            | selectattr('attributes.supported_features', 'eq', 43)
+            | rejectattr('attributes.is_hue_group')
+            | join(',',attribute="entity_id")
+          }}
+        brightness_pct: 10
+- id: '6'
+  alias: Turn on light when there is movement(Nighttime)
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.hue_motion_sensor_1_motion
+    to: 'on'
+  condition:
+    - time
+      before: "07:00:00"
+  action:
+    - service: light.turn_on
+      data: 
+        entity_id: group.hallway
+        brightness_pct: 10
+    - service: light.turn_on
+      data:
+        entity_id: group.bathroom
+        brightness_pct: 10
+        white_value: 0
+- id: '7'
+  alias: Turn off light when there is no movement for 5 minues
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.hue_motion_sensor_1_motion
+    to: 'off'
+    for:
+      minutes: 5
+  condition: []
+  action:
+    - service: light.turn_off
+      data: 
+        entity_id: group.hallway
+    - service: light.turn_off
+      data:
+        entity_id: group.bathroom
+# Reload this file on modification
+- id: '5'
+  alias: New file alert
+  trigger:
+    platform: event
+    event_type: folder_watcher
+    event_data:
+      event_type: modified
+      path: /config/automations.yaml 
+  action: 
+    - service: automation.reload
+
+# When I leave, AC should turn off.
+# When I arrive, AC should turn on if was turned off due to this.
+# TODO: Finish implementing
+- id: '8'
+  alias: Turn off the AC when I leave home
+  description: ''
+  trigger:
+  - entity_id: device_tracker.hostone
+    from: home
+    platform: state
+    to: not_home
+  condition:
+      - condition: state
+        entity_id: switch.air_conditioner
+	on
+  action:
+    - service: switch.turn_off
+      entity_id: all
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.ac_off_from_leaving
+- id: '9'
+  alias: Turn on the AC when I arrive home
+  description: ''
+  trigger:
+  - entity_id: device_tracker.hostone
+    from: not_home
+    platform: state
+    to: home
+  condition: []
+  action:
+    - service: switch.turn_on
+      entity_id: all
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.ac_off_from_leaving

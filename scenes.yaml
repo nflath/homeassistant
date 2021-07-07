@@ -1,0 +1,24 @@
+- id: '1601240001730'
+  name: Turn lights Red
+  entities:
+    light.hue_lightstrip_plus_1:
+      brightness: 254
+      effect: none
+      effect_list:
+      - colorloop
+      - random
+      friendly_name: Hue lightstrip plus 1
+      hs_color:
+      - 10.118
+      - 100
+      max_mireds: 500
+      min_mireds: 153
+      rgb_color:
+      - 255
+      - 43
+      - 0
+      state: 'on'
+      supported_features: 63
+      xy_color:
+      - 0.689
+      - 0.309

@@ -1,0 +1,41 @@
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+# http:
+#   base_url: example.duckdns.org:8123
+
+# Text to speech
+tts:
+  - platform: google_translate
+homeassistant:
+  allowlist_external_dirs:
+    - /config
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+input_boolean:
+  ac_off_from_leaving:
+    name: Was the AC turned off due to leaving the apartment
+
+cloud:
+
+device_tracker:
+  - platform: ping
+    interval_seconds: 2
+    scan_interval: 2
+    hosts:
+      hostone: 192.168.86.237
+
+logger:
+  default: info
+  logs:
+    homeassistant.components.ping: debug
+
+folder_watcher:
+  - folder: /config
+  
