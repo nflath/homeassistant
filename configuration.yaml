@@ -26,8 +26,6 @@ cloud:
 
 device_tracker:
   - platform: ping
-    interval_seconds: 2
-    scan_interval: 2
     hosts:
       hostone: 192.168.86.237
 
