@@ -119,11 +119,32 @@
       data:
         entity_id: group.bathroom
 
+# For some goddamn reason, we need to split this into two, otherwise it doesn't work.  Entity list too big?
 - id: '11'
   alias: If lights are turned on after 7AM and before 11AM, set them to bright 
   trigger:
    - platform: state
-     entity_id: light.hue_ambiance_lamp_1,light.hue_ambiance_lamp_2,light.hue_ambiance_lamp_3,light.hue_ambiance_lamp_4,light.hue_color_lamp_1,light.hue_color_lamp_1_2,light.hue_color_lamp_1_3,light.hue_color_lamp_2,light.hue_color_lamp_2_2,light.hue_color_lamp_3,light.hue_color_lamp_3_2,light.hue_color_lamp_4,light.hue_color_lamp_4_2,light.hue_color_lamp_5,light.hue_color_lamp_6,light.hue_color_lamp_7,light.hue_lightstrip_plus_1
+     entity_id: light.hue_ambiance_lamp_1,light.hue_ambiance_lamp_2,light.hue_ambiance_lamp_3,light.hue_ambiance_lamp_4,light.hue_color_lamp_1,light.hue_color_lamp_1_2,light.hue_color_lamp_1_3,light.hue_color_lamp_2,light.hue_color_lamp_2_2,light.hue_color_lamp_3,light.hue_color_lamp_3_2,light.hue_color_lamp_4,light.hue_color_lamp_4_2,light.hue_color_lamp_5,light.hue_color_lamp_6,light.hue_color_lamp_7,light.hue_lightstrip_plus_1xb
+     from: 'off'
+     to: 'on'
+  condition:
+     - condition: time
+       after: "07:00:00"
+       before: "23:00:00"
+  mode: parallel
+  action:
+     - service: light.turn_on
+       data:
+         brightness_pct: 100
+         color_name: white
+         entity_id: >- 
+           {{trigger.entity_id}}
+
+- id: '13'
+  alias: If lights are turned on after 7AM and before 11AM, set them to bright 
+  trigger:
+   - platform: state
+     entity_id: light.hue_color_lamp_5,light.hue_color_lamp_6,light.hue_color_lamp_7,light.hue_lightstrip_plus_1,light.hue_color_lamp_1_3
      from: 'off'
      to: 'on'
   condition:
