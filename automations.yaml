@@ -124,7 +124,7 @@
   alias: If lights are turned on after 7AM and before 11AM, set them to bright 
   trigger:
    - platform: state
-     entity_id: light.hue_ambiance_lamp_1,light.hue_ambiance_lamp_2,light.hue_ambiance_lamp_3,light.hue_ambiance_lamp_4,light.hue_color_lamp_1,light.hue_color_lamp_1_2,light.hue_color_lamp_1_3,light.hue_color_lamp_2,light.hue_color_lamp_2_2,light.hue_color_lamp_3,light.hue_color_lamp_3_2,light.hue_color_lamp_4,light.hue_color_lamp_4_2,light.hue_color_lamp_5,light.hue_color_lamp_6,light.hue_color_lamp_7,light.hue_lightstrip_plus_1xb
+     entity_id: light.hue_ambiance_lamp_1,light.hue_ambiance_lamp_2,light.hue_ambiance_lamp_3,light.hue_ambiance_lamp_4,light.hue_color_lamp_1,light.hue_color_lamp_1_2,light.hue_color_lamp_2,light.hue_color_lamp_2_2,light.hue_color_lamp_3,light.hue_color_lamp_3_2,light.hue_color_lamp_4,light.hue_color_lamp_4_2
      from: 'off'
      to: 'on'
   condition:
