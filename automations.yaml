@@ -11,10 +11,10 @@
   alias: Turn off the lights when I leave home
   description: ''
   trigger:
-  - entity_id: device_tracker.hostone
-    from: home
+  - entity_id: input_boolean.am_home
     platform: state
-    to: not_home
+    from: "on"
+    to: "off"
   condition: []
   action:
     - service: light.turn_off
@@ -23,10 +23,10 @@
   alias: Turn on the lights when I arrive home
   description: ''
   trigger:
-  - entity_id: device_tracker.hostone
-    from: not_home
+  - entity_id: input_boolean.am_home
     platform: state
-    to: home
+    from: "off"
+    to: "on"
   condition: []
   action:
     - service: light.turn_on
@@ -168,10 +168,10 @@
   alias: Turn off the AC when I leave home
   description: ''
   trigger:
-  - entity_id: device_tracker.hostone
-    from: home
+  - entity_id: input_boolean.am_home
     platform: state
-    to: not_home
+    from: "on"
+    to: "off"
   condition:
     - condition: state
       entity_id: switch.air_conditioner
@@ -186,10 +186,10 @@
   alias: Turn on the AC when I arrive home
   description: ''
   trigger:
-  - entity_id: device_tracker.hostone
-    from: not_home
+  - entity_id: input_boolean.am_home
     platform: state
-    to: home
+    from: "off"
+    to: "on"
   condition:
     - condition: state
       entity_id: input_boolean.ac_off_from_leaving
@@ -211,3 +211,28 @@
       entity_id: all
     - service: input_boolean.turn_off
       entity_id: input_boolean.ac_off_from_leaving
+
+################################################################################
+# Prescence
+################################################################################
+- id: '13'
+  alias: Leave home when disconnect from wifi
+  description: ''
+  trigger:
+  - entity_id: device_tracker.hostone
+    from: home
+    platform: state
+    to: not_home
+  action:
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.am_home
+- id: '14'
+  alias: Arrive home when door opens
+  description: ''
+  trigger:
+  - entity_id: binary_sensor.node_4_access_control_window_door_is_open
+    platform: state
+    to: 'on'
+  action:
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.am_home

@@ -21,6 +21,8 @@ scene: !include scenes.yaml
 input_boolean:
   ac_off_from_leaving:
     name: Was the AC turned off due to leaving the apartment
+  am_home:
+    name: Am I Home
 
 cloud:
 
